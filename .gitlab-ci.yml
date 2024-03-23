@@ -1,0 +1,145 @@
+# use the official gcc image, based on debian
+# can use verions as well, like gcc:5.2
+# see https://hub.docker.com/_/gcc/
+image: gcc
+
+build:
+  tags:
+    - ugrad
+  stage: build
+  except:
+    variables:
+      - $CI_COMMIT_MESSAGE =~ /NOTEST/
+  script:
+    - cd cachex
+    - rm -f *.o cachex
+    - if [ -f CMakeLists.txt ]; then cmake CMakeLists.txt; fi
+    - make
+  artifacts:
+    paths:
+      - cachex/cachex
+
+test_00:
+  tags:
+    - ugrad
+  stage: test
+  except:
+    variables:
+      - $CI_COMMIT_MESSAGE =~ /NOTEST/
+  script:
+    - cd cachex
+    - ./tests/test.sh 00 . cachex
+
+test_01:
+  tags:
+    - ugrad
+  stage: test
+  except:
+    variables:
+      - $CI_COMMIT_MESSAGE =~ /NOTEST/
+  script:
+    - cd cachex
+    - ./tests/test.sh 01 . cachex
+
+test_02:
+  tags:
+    - ugrad
+  stage: test
+  except:
+    variables:
+      - $CI_COMMIT_MESSAGE =~ /NOTEST/
+  script:
+    - cd cachex
+    - ./tests/test.sh 02 . cachex
+
+test_03:
+  tags:
+    - ugrad
+  stage: test
+  except:
+    variables:
+      - $CI_COMMIT_MESSAGE =~ /NOTEST/
+  script:
+    - cd cachex
+    - ./tests/test.sh 03 . cachex
+
+test_04:
+  tags:
+    - ugrad
+  stage: test
+  except:
+    variables:
+      - $CI_COMMIT_MESSAGE =~ /NOTEST/
+  script:
+    - cd cachex
+    - ./tests/test.sh 04 . cachex
+
+test_05:
+  tags:
+    - ugrad
+  stage: test
+  except:
+    variables:
+      - $CI_COMMIT_MESSAGE =~ /NOTEST/
+  script:
+    - cd cachex
+    - ./tests/test.sh 05 . cachex
+
+test_06:
+  tags:
+    - ugrad
+  stage: test
+  except:
+    variables:
+      - $CI_COMMIT_MESSAGE =~ /NOTEST/
+  script:
+    - cd cachex
+    - ./tests/test.sh 06 . cachex
+
+test_07:
+  tags:
+    - ugrad
+  stage: test
+  except:
+    variables:
+      - $CI_COMMIT_MESSAGE =~ /NOTEST/
+  script:
+    - cd cachex
+    - ./tests/test.sh 07 . cachex
+
+test_08:
+  tags:
+    - ugrad
+  stage: test
+  except:
+    variables:
+      - $CI_COMMIT_MESSAGE =~ /NOTEST/
+  script:
+    - cd cachex
+    - ./tests/test.sh 08 . cachex
+
+test_09:
+  tags:
+    - ugrad
+  stage: test
+  except:
+    variables:
+      - $CI_COMMIT_MESSAGE =~ /NOTEST/
+  script:
+    - cd cachex
+    - ./tests/test.sh 09 . cachex
+
+bench:
+  tags:
+    - ugrad
+  stage: test
+  except:
+    variables:
+      - $CI_COMMIT_MESSAGE =~ /NOTEST/
+  script:
+    - cd cachex
+    - ./tests/bench.sh 00 . cachex
+    - ./tests/bench.sh 01 . cachex
+    - ./tests/bench.sh 02 . cachex
+    - ./tests/bench.sh 03 . cachex
+    - ./tests/bench.sh 04 . cachex
