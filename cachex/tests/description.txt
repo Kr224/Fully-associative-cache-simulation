@@ -1,8 +1,8 @@
 Functionality
 00: Read a value 2x at same address + stat
-01: Read 4 values at offset addresses + stat
-02: Read 2 values at different lines + stat
-03: Read 2 values multiple times in different lines + stat
+01: Read 2 values at different lines + stat
+02: Read 10 values on the first 10 bytes
+03: Read 4 values two in each line + stat
 04: Read 10 values spread across memory + stat
 05: Small 200 reference run
 06: Sequential byte access 64K access
