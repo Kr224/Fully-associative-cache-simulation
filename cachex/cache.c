@@ -2,8 +2,6 @@
 // Created by Alex Brodsky on 2024-03-10.
 //
 
-///The type of cache I will be implementing is directly mapped cache
-
 #include "cache.h"
 #include "math.h"
 
@@ -15,18 +13,19 @@ struct Line {
 
 struct cache {
     int initialize;
-    struct Line* line;
     int numberSets;
+    struct Line* line;
 };
 
 static void init(struct cache *c, struct cache_info *cacheInfo) {
     if (c->initialize != 1) {
         c->initialize = 1; // Set the flag to 1
-        unsigned int numSets = cacheInfo->F_size / 32; // Calculates number of sets based on fast memory size
+        unsigned int numSets = (cacheInfo->F_size - sizeof(struct cache)) / sizeof(struct Line); // Calculates number of sets based on fast memory size
         c->numberSets = numSets; // Assign the number of sets
         c->line = (struct Line*)(cacheInfo->F_memory + sizeof(struct cache)); // Allocating memory for each line separately
         for (int i = 0; i < numSets; i++) {
-            c->line[i].b = (void*)((char*)(cacheInfo->F_memory) + sizeof(struct cache) + sizeof(struct Line) * numSets + (32 * i));
+            c->line[i].b = (void*)((char*)(cacheInfo->F_memory) + sizeof(struct cache)
+                    + sizeof(struct Line) * numSets + (32 * i));
         }
     }
 }
@@ -41,9 +40,21 @@ int cache_get(unsigned long address, unsigned long* value) {
     //getting line corresponding to the set index
     struct Line *l = &(c->line[setIndex]);
 
-    unsigned long offset = address >> 5; //for 32 bit adresses
-    unsigned long index = log2(c_info.F_size / 32);
-    unsigned long tag = log2(c_info.M_size) - offset - index;
+    int numLines = c_info.F_size / c_info.M_size; // to get my cache lines
+
+    unsigned int offsetBits = 0;
+    while ((1 << offsetBits) < numLines) { //no. of bits i need for my offset iside the cache line
+        offsetBits++;
+    }
+    unsigned int indexBits = 0;
+    while ((1 << indexBits) < numLines) {
+        indexBits++;
+    }
+
+    unsigned int offsetMask = (1 << offsetBits) - 1;
+    unsigned long tag = address >> (offsetBits + indexBits);
+    unsigned int offset = address & offsetMask;
+
 
     // Check if the tag matches and the line contains valid data (not empty)
     if (l->tag == tag && l->validBit == 1) {
@@ -57,3 +68,12 @@ int cache_get(unsigned long address, unsigned long* value) {
         return 0; // Miss
     }
 }
+
+
+
+
+
+
+
+
+
